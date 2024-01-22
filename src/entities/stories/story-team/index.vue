@@ -1,18 +1,15 @@
 <script setup lang="ts">
-
 import { computed } from 'vue';
-import { useStoriesStore } from 'src/shared/stores';
 
 const props = defineProps<{
     canVote: boolean,
+    storyStatus: string,
 }>();
 
 const emits = defineEmits(['open-vote-modal']);
 
-const storiesStore = useStoriesStore();
-
 const isAllVoted = computed(() => {
-    return storiesStore.currentStory?.status === 'voted' || storiesStore.currentStory?.status === 'done';
+    return props.storyStatus === 'voted' || props.storyStatus === 'done';
 });
 
 </script>

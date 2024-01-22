@@ -16,28 +16,33 @@ const storiesStore = useStoriesStore();
 const isOpenStoryCreationModal = ref(false);
 
 const selectStory = (storyId: string): void => {
-    storiesStore.selectCurrentStory(storyId);
+    storiesStore.currentStoryId = storyId;
     startObserveStory(props.sessionId, storyId);
 }
 
+const currentStory = computed(() => storiesStore.stories.find((item) => item.id === storiesStore.currentStoryId));
+
 const isDone = computed(() => {
-    return storiesStore.currentStory?.status === 'done' ? 'light-green-lighten-3' : '';
+    return currentStory.value?.status  === 'done' ? 'light-green-lighten-3' : '';
 });
 </script>
 
 <template>
   <div class="task-list">
     <div class="task-list__title">Stories</div>
-    <template v-if="storiesStore.stories.length">
+    <div
+      v-if="storiesStore.stories.length"
+      class="task-list__list"
+    >
       <StoryCard
         v-for="item in storiesStore.stories"
         :title="item.text"
         :estimation="item.estimation"
-        :class="`mb-3 ${item.id === storiesStore.currentStory?.id ? 'selected' : ''}`"
+        :class="`mb-3 ${item.id === currentStory?.id ? 'selected' : ''}`"
         :style="`background: ${item.status === 'done' ? '#C5E1A5' : ''}`"
         @click="selectStory(item.id)"
       />
-    </template>
+    </div>
     <div
       v-else
       class="task-list__empty"
@@ -73,6 +78,14 @@ const isDone = computed(() => {
     color: grey;
     margin: 0 0 1rem 0;
     text-transform: uppercase;
+  }
+
+  &__list {
+    min-height: max-content;
+    max-height: 600px;
+    height: 100%;
+    overflow-y: auto;
+    margin-bottom: 1rem;
   }
 
   &__empty {

@@ -1,29 +1,26 @@
 <script setup lang="ts">
-import Timer from '../../components/Timer.vue';
-import { useStoriesStore } from 'src/shared/stores';
+// import Timer from '../../components/Timer.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{
-    isStartedEstimation: boolean,
+    storyStatus: string,
 }>();
 
 const emits = defineEmits(['start-estimation', 'reveal-all-cards', 'done', 'restart']);
 
-const storiesStore = useStoriesStore();
-
 const isAllVoted = computed(() => {
-    return storiesStore.currentStory?.status === 'voted' || storiesStore.currentStory?.status === 'done';
+    return (props.storyStatus === 'voted' || props.storyStatus === 'done') ?? false;
 });
 
 const isDone = computed(() => {
-    return storiesStore.currentStory?.status === 'done';
+    return props.storyStatus === 'done';
 });
 </script>
 
 <template>
   <div class="start-estimation-story">
     <v-btn
-      v-if="!isStartedEstimation && (storiesStore.currentStory && storiesStore.currentStory.status === 'created')"
+      v-if="props.storyStatus === 'created'"
       density="compact"
       color="indigo-accent-4"
       style="font-size: 10px"

@@ -32,28 +32,36 @@ const useStoriesStore = defineStore('stories', () => {
         _stories.value.push(newStory);
     }
 
-    const _currentStory: Ref<Story | undefined> = ref(undefined);
+    const currentStoryId: Ref<string | null> = ref(null);
 
-    const currentStory = computed(() => _currentStory.value);
+    const setParticipantsToCurrentStory = (
+        storyId: string,
+        participants: {
+            id: string,
+            username: string,
+            result: number,
+            isVoted: boolean,
+        }[]): void => {
+        const foundStory = _stories.value.find((item) => item.id === storyId);
 
-    const setParticipantsToCurrentStory = (participants: {
-        id: string,
-        username: string,
-        result: number,
-        isVoted: boolean,
-    }[]): void => {
-        _currentStory.value!.participants = participants;
-    }
-
-    const setStatusStore = (status: string): void => {
-        if (_currentStory.value) {
-            _currentStory.value.status = status;
+        if (foundStory) {
+            foundStory.participants = participants;
         }
     }
 
-    const vote = (userId: string, isVote: boolean, result: number): void => {
-        if (_currentStory.value && _currentStory.value?.participants) {
-            const participant = _currentStory.value.participants
+    const setStatusStore = (storyId: string, status: string): void => {
+        const foundStory = _stories.value.find((item) => item.id === storyId);
+
+        if (foundStory) {
+            foundStory.status = status;
+        }
+    }
+
+    const vote = (storyId: string, userId: string, isVote: boolean, result: number): void => {
+        const foundStory = stories.value.find((item) => item.id === storyId);
+
+        if (foundStory && foundStory.participants) {
+            const participant = foundStory.participants
                 .find((item) => item.id === userId);
 
             if (participant) {
@@ -63,19 +71,14 @@ const useStoriesStore = defineStore('stories', () => {
         }
     }
 
-    const selectCurrentStory = (id: string): void => {
-        _currentStory.value = _stories.value.find((s) => s.id === id);
-    }
-
     return {
         stories,
         addNewStory,
-        currentStory,
-        selectCurrentStory,
         setStories,
         setParticipantsToCurrentStory,
         vote,
         setStatusStore,
+        currentStoryId,
     }
 });
 
