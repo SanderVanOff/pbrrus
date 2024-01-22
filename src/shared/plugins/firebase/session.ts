@@ -1,14 +1,23 @@
-import { getDatabase, set, ref as dbRef, push, child, get, onChildChanged, onValue } from "firebase/database";
+import { getDatabase, set, ref as dbRef, child, get, onChildChanged, onValue } from "firebase/database";
 import { PokerSession } from 'src/shared/const';
 import { useStoriesStore } from 'src/shared/stores';
 
-export const createNewPokerSession = async (payload: PokerSession): Promise<void> => {
+export const createNewSession = async (payload: PokerSession): Promise<void> => {
     const db = getDatabase();
+    const mappedParticipants: Record<string, any> = {};
+
+    if (payload.participants) {
+        payload.participants.forEach((item) => {
+            mappedParticipants[item.id] = item;
+        });
+    }
+
     try {
         await set(dbRef(db, 'poker-session/' + payload.id), {
             id: payload.id,
             title: payload.title,
             creationTime: payload.creationTime,
+            participants: mappedParticipants,
         });
     } catch (e) {
         console.log(e);

@@ -21,6 +21,11 @@ export const routes: RouteRecordRaw[] = [
         path: '/login',
         name: 'login',
         component: () => import('./login'),
+    },
+    {
+        path: '/team/:id',
+        name: 'team',
+        component: () => import('./team'),
     }
 ];
 

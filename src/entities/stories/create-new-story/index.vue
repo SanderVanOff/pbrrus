@@ -64,7 +64,7 @@ const addNewStory = (): void => {
         <v-btn
           :disabled="!text"
           density="compact"
-          color="indigo-accent-4"
+          color="blue-accent-4"
           style="font-size: 10px"
           @click="addNewStory"
         >

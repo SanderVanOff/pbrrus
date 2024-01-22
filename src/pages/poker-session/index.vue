@@ -17,38 +17,7 @@ const userStore = useUserStore();
 const { id } = router.currentRoute.value.params;
 isGlobalLoading.value = true;
 
-// router.beforeEach(async (to, from, next) => {
-//     if (userStore.currentUser) {
-//         console.log(2)
-//         if (!sessionStore.sessionParticipants.some((item) => item.id === userStore.currentUser!.id)) {
-//             const user = {
-//                 id: userStore.currentUser.id,
-//                 username: userStore.currentUser.username,
-//             };
-//             await setCurrentUserToSessionParticipants(pokerSession.id, user);
-//             sessionStore.setParticipantsToSession(pokerSession.id, user);
-//         }
-//     } else {
-//         console.log(999)
-//     }
-//
-//     next();
-// });
-
 let pokerSession = await getPokerSessionById(id as string);
-
-if (userStore.currentUser) {
-    if (!sessionStore.sessionParticipants.some((item) => item.id === userStore.currentUser!.id)) {
-        const user = {
-            id: userStore.currentUser.id,
-            username: userStore.currentUser.username,
-        };
-        await setCurrentUserToSessionParticipants(pokerSession.id, user);
-        pokerSession = await getPokerSessionById(id as string);
-    }
-} else {
-    console.log('почему-то нет юзера')
-}
 
 if (pokerSession && pokerSession.stories) {
     storiesStore.setStories(pokerSession.stories);

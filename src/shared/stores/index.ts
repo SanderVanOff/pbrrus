@@ -4,6 +4,7 @@ import usePokerSessionStore from './poker-session';
 import useStoriesStore from './stories';
 import useCommonStore from './common';
 import useUserStore from './user';
+import useTeamStore from './team';
 
 const store = createPinia();
 
@@ -14,4 +15,5 @@ export {
     useStoriesStore,
     useCommonStore,
     useUserStore,
+    useTeamStore,
 }

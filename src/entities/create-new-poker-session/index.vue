@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
-import { usePokerSessionApi } from 'src/entities/api/poker-session';
+
+const emits = defineEmits(['create-team']);
 
 const title: Ref<string | null> = ref(null);
 
-const pokerSessionApi = usePokerSessionApi();
-
-const createNewPokerSession = async (): Promise<void> => {
+const createNewSession = async (): Promise<void> => {
     if (title.value) {
-        await pokerSessionApi.createNewPokerSession(title.value!);
+        emits('create-team', title.value)
         title.value = null;
     }
 }
@@ -27,8 +26,10 @@ const createNewPokerSession = async (): Promise<void> => {
         class="mr-4"
       />
       <v-btn
-        color="primary"
-        @click="createNewPokerSession"
+        density="comfortable"
+        style="font-size: 10px;"
+        color="blue-accent-4"
+        @click="createNewSession"
       >
         Create
       </v-btn>
