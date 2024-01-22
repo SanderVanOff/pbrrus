@@ -19,7 +19,7 @@ export const setParticipantsToStory = async (
     const firebase = useFirebase();
     await firebase.setParticipantsToStory(sessionId, storyId, participants);
     const storiesStore = useStoriesStore()
-    storiesStore.setParticipantsToCurrentStory(participants);
+    storiesStore.setParticipantsToCurrentStory(storyId, participants);
 }
 
 export const voteForStory = async (

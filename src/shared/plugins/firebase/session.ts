@@ -70,7 +70,7 @@ export const startObserveStory = (sessionId: string, storyId: string): void => {
         if (snapshot.exists()) {
             const story = snapshot.val()
             const storiesStore = useStoriesStore();
-            storiesStore.setStatusStore(story.status);
+            storiesStore.setStatusStore(storyId, story.status);
         } else {
             console.log('нет данных')
         }
@@ -80,7 +80,7 @@ export const startObserveStory = (sessionId: string, storyId: string): void => {
         const storiesStore = useStoriesStore();
         if (data.exists()) {
             const userData = data.val();
-            storiesStore.vote(userData.id, userData.isVoted, userData.result);
+            storiesStore.vote(storyId, userData.id, userData.isVoted, userData.result);
         } else {
             console.log('нет данных')
         }

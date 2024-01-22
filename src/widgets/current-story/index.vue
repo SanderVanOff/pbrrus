@@ -5,7 +5,7 @@ import StoriesPersonCard from 'src/entities/stories/person-card';
 import VoteCards from 'src/entities/stories/vote-cards';
 
 import { useCommonStore, useStoriesStore, usePokerSessionStore, useUserStore } from 'src/shared/stores';
-import { computed, Ref, ref } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 import { setParticipantsToStory, voteForStory, startStory as startCurrentStory, setStoryStatus } from './api';
 import { storeToRefs } from 'pinia';
 
@@ -21,19 +21,19 @@ const props = defineProps<{
 
 const isModalOpen: Ref<boolean> = ref(false);
 
-const isStartedStory: Ref<boolean> = ref(false);
+const currentStory = computed(() => storiesStore.stories.find((story) => story.id === storiesStore.currentStoryId));
 
 const openLink = (): void => {
-    if (storiesStore.currentStory?.link) {
-        window.open(storiesStore.currentStory.link, '_blank');
+    if (currentStory.value?.link) {
+        window.open(currentStory.value.link, '_blank');
     }
 }
 
 const vote = async (val: number): Promise<void> => {
-    if (storiesStore.currentStory) {
+    if (currentStory.value) {
         const { currentUser } = storeToRefs(userStore);
         if (currentUser.value) {
-            await voteForStory(props.sessionId, storiesStore.currentStory!.id, {
+            await voteForStory(props.sessionId, currentStory.value!.id, {
                 id: currentUser.value!.id,
                 username: currentUser.value!.username,
                 isVoted: true,
@@ -44,10 +44,9 @@ const vote = async (val: number): Promise<void> => {
 }
 
 const startStory = async (): Promise<void> => {
-    if (storiesStore.currentStory) {
-        isStartedStory.value = true;
+    if (currentStory.value) {
         commonStore.isGlobalLoading = true;
-        await startCurrentStory(props.sessionId, storiesStore.currentStory!.id, 'inProgress');
+        await startCurrentStory(props.sessionId, currentStory.value!.id, 'inProgress');
         const storyParticipants = sessionStore.sessionParticipants.map((item) => {
             return {
                 ...item,
@@ -56,29 +55,29 @@ const startStory = async (): Promise<void> => {
             }
         });
 
-        await setParticipantsToStory(props.sessionId, storiesStore.currentStory!.id, storyParticipants);
+        await setParticipantsToStory(props.sessionId, currentStory.value!.id, storyParticipants);
         commonStore.isGlobalLoading = false;
     }
 }
 
 const canVote = computed(() => {
-    if (storiesStore.currentStory && storiesStore.currentStory.participants) {
-        const user = storiesStore.currentStory.participants.find((item) => {
+    if (currentStory.value && currentStory.value?.participants) {
+        const user = currentStory.value!.participants!.find((item) => {
             return item.id === userStore.currentUser?.id;
         });
 
-        return storiesStore.currentStory?.status === 'inProgress' && (user && !user.isVoted);
+        return currentStory.value?.status === 'inProgress' && (user && !user.isVoted);
     }
 
     return false;
 });
 
 const revealAllCards = async (): Promise<void> => {
-    await setStoryStatus(props.sessionId, storiesStore.currentStory!.id, 'voted');
+    await setStoryStatus(props.sessionId, currentStory.value!.id, 'voted');
 }
 
 const closeStory = async (): Promise<void> => {
-    await setStoryStatus(props.sessionId, storiesStore.currentStory!.id, 'done');
+    await setStoryStatus(props.sessionId, currentStory.value!.id, 'done');
 }
 
 const restartStory = async (): Promise<void> => {
@@ -91,31 +90,31 @@ const restartStory = async (): Promise<void> => {
     <div class="current-story__header">
       <div>
         <div class="current-story__title">Current Story</div>
-        <template v-if="storiesStore.currentStory">
+        <template v-if="currentStory">
           <div class="current-story__subtitle">
-            {{ storiesStore.currentStory.text }}
+            {{ currentStory.text }}
           </div>
           <a
             class="current-story__link"
-            @click="openLink">{{ storiesStore.currentStory.link }}</a>
+            @click="openLink">{{ currentStory.link }}</a>
         </template>
       </div>
       <div
-        v-if="storiesStore.currentStory"
+        v-if="currentStory"
         class="d-flex flex-column align-items-end"
       >
         <div class="current-story__title">Story score</div>
         <div class="current-story__subtitle ml-auto">
-          {{ storiesStore.currentStory.estimation }}
+          {{ currentStory.estimation }}
         </div>
       </div>
     </div>
     <div
-      v-if="storiesStore.currentStory"
+      v-if="currentStory"
       class="current-story__content"
     >
       <StartEstimationStory
-        :is-started-estimation="isStartedStory"
+        :story-status="currentStory.status"
         class="mb-4"
         @start-estimation="startStory"
         @reveal-all-cards="revealAllCards"
@@ -123,17 +122,19 @@ const restartStory = async (): Promise<void> => {
         @restart="restartStory"
       />
       <StoryTeam
-        v-if="isStartedStory || storiesStore.currentStory.status !== 'created'"
+        v-if="currentStory.status !== 'created'"
+        :story-status="currentStory.status"
         :can-vote="canVote"
         @open-vote-modal="isModalOpen = true"
       >
-        <template v-if="storiesStore.currentStory?.participants">
+        <template v-if="currentStory?.participants">
         <StoriesPersonCard
-          v-for="item in storiesStore.currentStory.participants"
+          v-for="item in currentStory.participants"
           :key="item.id"
           :user-name="item.username"
           :is-voted="item.isVoted"
           :score="item.result"
+          :story-status="currentStory.status"
         />
         </template>
       </StoryTeam>
@@ -145,9 +146,9 @@ const restartStory = async (): Promise<void> => {
       Story not selected
     </div>
     <VoteCards
-      v-if="storiesStore.currentStory"
+      v-if="currentStory"
       v-model:is-open="isModalOpen"
-      :title="storiesStore.currentStory?.text!"
+      :title="currentStory?.text!"
       @select="vote"
     />
   </v-card>

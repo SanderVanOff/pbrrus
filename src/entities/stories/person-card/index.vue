@@ -1,18 +1,15 @@
 <script setup lang="ts">
-
-import { useStoriesStore } from 'src/shared/stores';
 import { computed } from 'vue';
 
 const props = defineProps<{
     userName: string
     isVoted: boolean,
     score: number,
+    storyStatus: string,
 }>();
 
-const storiesStore = useStoriesStore();
-
 const isAllVoted = computed(() => {
-    return storiesStore.currentStory?.status === 'voted' || storiesStore.currentStory?.status === 'done';
+    return props.storyStatus === 'voted' || props.storyStatus === 'done';
 });
 
 </script>

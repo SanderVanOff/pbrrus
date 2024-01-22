@@ -8,6 +8,7 @@ import router from 'src/shared/router';
 import { useCommonStore, usePokerSessionStore, useStoriesStore, useUserStore } from 'src/shared/stores';
 import { storeToRefs } from 'pinia';
 import { AppLoadingMask } from 'src/shared/components';
+import { Ref, ref } from 'vue';
 
 const { isGlobalLoading } = storeToRefs(useCommonStore());
 const storiesStore = useStoriesStore();
@@ -19,8 +20,12 @@ isGlobalLoading.value = true;
 
 let pokerSession = await getPokerSessionById(id as string);
 
+storiesStore.currentStoryId = null;
+
 if (pokerSession && pokerSession.stories) {
     storiesStore.setStories(pokerSession.stories);
+} else {
+    storiesStore.setStories([]);
 }
 
 if (pokerSession && pokerSession.participants) {
