@@ -34,13 +34,13 @@ const usePokerSessionStore = defineStore('poker-session-store', () => {
         _pokerSessions.value = ps;
     }
 
-    const createNewPokerSession = (payload: PokerSession): void => {
+    const createNewSession = (payload: PokerSession): void => {
         _pokerSessions.value.push(payload);
     }
 
     return {
         pokerSessions,
-        createNewPokerSession,
+        createNewSession,
         fillPokerSession,
         sessionParticipants,
         setSessionParticipants,

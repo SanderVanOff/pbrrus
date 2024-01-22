@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged, } from 'firebase/auth';
 
 import { Ref, ref } from 'vue';
 import {
-    createNewPokerSession,
+    createNewSession,
     getAllPokerSession,
     createNewStory,
     getPokerSessionById,
@@ -12,14 +12,22 @@ import {
     changeStoryStatus,
     voteForStory,
     startObserveStory,
-} from './poker-session';
+} from './session';
 import {
     registerNewUser,
     logout,
     logIn,
     getUserDataById,
 } from './auth';
-import { PokerSession, User } from 'src/shared/const';
+import {
+    createNewTeam,
+    getAllTeams,
+    getTeamById,
+    getNonTeamUsers,
+    changeTeam,
+    getTeamMembers,
+} from './team';
+import { PokerSession, Team, User } from 'src/shared/const';
 import { useUserStore } from 'src/shared/stores';
 import router from 'src/shared/router';
 
@@ -37,7 +45,7 @@ const firebaseConfig = {
 const firebaseApp: Ref<FirebaseApp | null> = ref(null);
 
 export const useFirebase = (): {
-    createNewPokerSession: (payload: { id: string; title: string; creationTime: string; }) => Promise<void>,
+    createNewSession: (payload: PokerSession) => Promise<void>,
     getAllPokerSession: () => Promise<PokerSession[]>,
     getPokerSessionById: (id: string) => Promise<PokerSession>,
     createNewStory: (
@@ -79,6 +87,13 @@ export const useFirebase = (): {
     registerNewUser: (user: {id: string, email: string, password: string, username: string, role: string }) => Promise<void>,
     logIn: (email: string, password: string) => Promise<User | undefined>,
     logout: () => Promise<void>,
+    //Team
+    createNewTeam: (payload: { id: string, name: string }) => Promise<void>,
+    getAllTeams: () => Promise<Team[]>,
+    getTeamById: (teamId: string) => Promise<Team | undefined>,
+    getNonTeamUsers: () => Promise<User[]>,
+    changeTeam: (userId: string, teamId: string | null) => Promise<void>,
+    getTeamMembers: (teamId: string) => Promise<User[]>,
 } => {
     if (!firebaseApp.value) firebaseApp.value = initializeApp(firebaseConfig);
 
@@ -96,7 +111,7 @@ export const useFirebase = (): {
         registerNewUser,
         logout,
         logIn,
-        createNewPokerSession,
+        createNewSession,
         getAllPokerSession,
         createNewStory,
         getPokerSessionById,
@@ -105,5 +120,11 @@ export const useFirebase = (): {
         startObserveStory,
         changeStoryStatus,
         voteForStory,
+        createNewTeam,
+        getAllTeams,
+        getTeamById,
+        getNonTeamUsers,
+        changeTeam,
+        getTeamMembers,
     }
 }
