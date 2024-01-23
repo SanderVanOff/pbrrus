@@ -13,7 +13,7 @@ import { createNewSession } from 'src/pages/main/api';
 
 const { isGlobalLoading } = storeToRefs(useCommonStore());
 
-const { currentUser } = storeToRefs(useUserStore());
+const { isAdmin } = storeToRefs(useUserStore());
 
 const isSelectTeamOpen = ref(false);
 
@@ -43,7 +43,7 @@ const selectedTeam = async (teamId: string): Promise<void> => {
       <div>
         <pre>{{teamName}}</pre>
         <CreateNewPokerSession
-          v-if="currentUser?.role === 'admin'"
+          v-if="isAdmin"
           class="mb-4"
           @create-team="createTeamName($event)"
         />

@@ -6,7 +6,7 @@ import VoteCards from 'src/entities/stories/vote-cards';
 
 import { useCommonStore, useStoriesStore, usePokerSessionStore, useUserStore } from 'src/shared/stores';
 import { computed, Ref, ref, watch } from 'vue';
-import { setParticipantsToStory, voteForStory, startStory as startCurrentStory, setStoryStatus } from './api';
+import { setParticipantsToStory, voteForStory, startStory as startCurrentStory, setStoryStatus, reVote } from './api';
 import { storeToRefs } from 'pinia';
 
 const storiesStore = useStoriesStore();
@@ -61,8 +61,8 @@ const startStory = async (): Promise<void> => {
 }
 
 const canVote = computed(() => {
-    if (currentStory.value && currentStory.value?.participants) {
-        const user = currentStory.value!.participants!.find((item) => {
+    if (currentStory.value && currentStory.value.participants) {
+        const user = currentStory.value.participants.find((item) => {
             return item.id === userStore.currentUser?.id;
         });
 
@@ -83,6 +83,28 @@ const closeStory = async (): Promise<void> => {
 const restartStory = async (): Promise<void> => {
     await startStory();
 }
+
+const onReVote = async (): Promise<void> => {
+    const { currentUser } = storeToRefs(userStore);
+    if (currentUser.value) {
+        await reVote(props.sessionId, currentStory.value!.id, {
+            id: currentUser.value!.id,
+            username: currentUser.value!.username,
+        });
+    }
+}
+
+const canReVote = computed(() => {
+    if (currentStory.value && currentStory.value.participants) {
+        const user = currentStory.value.participants.find((item) => {
+            return item.id === userStore.currentUser?.id;
+        });
+
+        return currentStory.value?.status === 'inProgress' && (user && user.isVoted);
+    }
+
+    return false;
+});
 </script>
 
 <template>
@@ -125,7 +147,9 @@ const restartStory = async (): Promise<void> => {
         v-if="currentStory.status !== 'created'"
         :story-status="currentStory.status"
         :can-vote="canVote"
+        :can-re-vote="canReVote"
         @open-vote-modal="isModalOpen = true"
+        @re-vote="onReVote"
       >
         <template v-if="currentStory?.participants">
         <StoriesPersonCard

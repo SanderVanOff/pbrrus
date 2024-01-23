@@ -71,6 +71,7 @@ export const startObserveStory = (sessionId: string, storyId: string): void => {
             const story = snapshot.val()
             const storiesStore = useStoriesStore();
             storiesStore.setStatusStore(storyId, story.status);
+            storiesStore.setParticipantsToCurrentStory(storyId, Object.keys(story.participants).map((key) => story.participants[key]))
         } else {
             console.log('нет данных')
         }
@@ -134,6 +135,21 @@ export const voteForStory = async (
     try {
         const databaseReference = dbRef(db, `poker-session/${sessionId}/stories/${storyId}/participants/${user.id}`);
         await set(databaseReference, user);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const reVoteForStory = async (sessionId: string, storyId: string, user: { id: string, username: string }): Promise<void> => {
+    const db = getDatabase();
+    try {
+        const databaseReference = dbRef(db, `poker-session/${sessionId}/stories/${storyId}/participants/${user.id}`);
+        await set(databaseReference, {
+            id: user.id,
+            username: user.username,
+            result: 0,
+            isVoted: false,
+        });
     } catch (e) {
         console.log(e);
     }

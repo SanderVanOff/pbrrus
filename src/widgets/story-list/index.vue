@@ -6,12 +6,15 @@ const props = defineProps<{
     sessionId: string,
 }>();
 
-import { useStoriesStore } from 'src/shared/stores';
+import { useStoriesStore, useUserStore } from 'src/shared/stores';
 import { computed, ref } from 'vue';
 import { createNewStory, startObserveStory } from './api';
 import router from 'src/shared/router';
+import { storeToRefs } from 'pinia';
 
 const storiesStore = useStoriesStore();
+
+const { isAdmin } = storeToRefs(useUserStore());
 
 const isOpenStoryCreationModal = ref(false);
 
@@ -50,6 +53,7 @@ const isDone = computed(() => {
       No stories in session
     </div>
     <v-btn
+      v-if="isAdmin"
       density="compact"
       color="indigo-accent-4"
       style="font-size: 10px"
