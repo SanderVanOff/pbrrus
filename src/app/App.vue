@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { Routing } from 'src/pages';
+import { useNotifyStore } from 'src/shared/stores';
+import NotificationItem from 'src/shared/components/NotificationItem.vue';
+
+const notifyStore = useNotifyStore();
 </script>
 
 <template>
@@ -7,6 +11,15 @@ import { Routing } from 'src/pages';
     <div class="app-main">
       <v-app>
         <Routing />
+        <NotificationItem
+          v-for="notify in notifyStore.notifications"
+          :key="notify.id"
+          :id="notify.id"
+          :title="notify.title"
+          :type="notify.type"
+          :text="notify.text"
+          @close="notifyStore.closeNotification($event)"
+        />
       </v-app>
     </div>
   </Suspense>

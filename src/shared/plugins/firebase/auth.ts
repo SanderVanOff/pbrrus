@@ -18,7 +18,7 @@ export const registerNewUser = async (user: User): Promise<void> => {
             id: userCredential.user.uid,
         });
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -29,7 +29,7 @@ export const logIn = async (email: string, password: string): Promise<User | und
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         return await getUserDataById(userCredential.user.uid);
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
