@@ -3,10 +3,11 @@ import { computed } from 'vue';
 
 const props = defineProps<{
     canVote: boolean,
+    canReVote: boolean,
     storyStatus: string,
 }>();
 
-const emits = defineEmits(['open-vote-modal']);
+const emits = defineEmits(['open-vote-modal', 're-vote']);
 
 const isAllVoted = computed(() => {
     return props.storyStatus === 'voted' || props.storyStatus === 'done';
@@ -33,11 +34,12 @@ const isAllVoted = computed(() => {
         <span>Vote</span>
       </v-btn>
       <v-btn
-        v-if="!canVote && !isAllVoted"
+        v-if="canReVote && !isAllVoted"
         density="compact"
         color="blue-grey-lighten-2"
         style="font-size: 10px"
         class="mr-4"
+        @click="emits('re-vote')"
       >
         <v-icon
           icon="mdi mdi-restart"

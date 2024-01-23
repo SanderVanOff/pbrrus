@@ -42,8 +42,10 @@ isGlobalLoading.value = false;
       <div class="poker-session__header">
         <div>Session: <span>{{ pokerSession?.title }}</span></div>
       </div>
-      <div class="poker-session__content">
-        <v-card>
+      <div
+        v-if="pokerSession"
+        class="poker-session__content">
+        <v-card class="poker-session__story-list">
           <StoryList
             :session-id="pokerSession.id"
           />
@@ -67,6 +69,10 @@ isGlobalLoading.value = false;
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 1rem;
+  }
+
+  &__story-list {
+    height: max-content;
   }
 }
 </style>

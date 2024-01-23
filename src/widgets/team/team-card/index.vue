@@ -5,12 +5,14 @@ import TeamMember from 'src/entities/team/team-member/index';
 import AddTeamMember from 'src/entities/team/add-team-member/index';
 import NonTeamUsers from 'src/entities/team/non-team-users/index';
 import router from 'src/shared/router';
-import { useCommonStore, useTeamStore } from 'src/shared/stores';
+import { useCommonStore, useTeamStore, useUserStore } from 'src/shared/stores';
 import { storeToRefs } from 'pinia';
 
 const teamStore = useTeamStore();
 
 const { isGlobalLoading } = storeToRefs(useCommonStore());
+
+const { isAdmin } = storeToRefs(useUserStore());
 
 const { id } = router.currentRoute.value.params;
 
@@ -44,6 +46,7 @@ const changeUserTeam = async (userId: string, teamId: string | null): Promise<vo
       <div class="team-card__header">
         <div class="team-card__title">{{ teamStore.currentTeam.name }}</div>
         <AddTeamMember
+          v-if="isAdmin"
           class="team-members__add-team-member"
           @start-addition="startAddition"
         />

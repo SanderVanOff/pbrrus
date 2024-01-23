@@ -11,9 +11,12 @@ const useUserStore = defineStore('user', () => {
         _currentUser.value = cu;
     }
 
+    const isAdmin = computed(() => _currentUser.value?.role === 'admin');
+
     return {
         currentUser,
         setCurrentUser,
+        isAdmin,
     }
 });
 

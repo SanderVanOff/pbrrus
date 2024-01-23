@@ -2,6 +2,10 @@
 import CreateNewTeam from 'src/entities/team/create-new-team/index';
 import TeamItem from 'src/entities/team/team-item/index';
 import { getAllTeams } from 'src/widgets/team/team-list/api';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from 'src/shared/stores';
+
+const { isAdmin } = storeToRefs(useUserStore());
 
 const teams = await getAllTeams();
 </script>
@@ -20,7 +24,7 @@ const teams = await getAllTeams();
         />
       </RouterLink>
     </div>
-    <CreateNewTeam />
+    <CreateNewTeam v-if="isAdmin" />
   </v-card>
 </template>
 

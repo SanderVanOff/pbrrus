@@ -39,3 +39,8 @@ export const setStoryStatus = async (sessionId: string, storyId: string, status:
     const firebase = useFirebase();
     await firebase.changeStoryStatus(sessionId, storyId, status);
 }
+
+export const reVote = async (sessionId: string, storyId: string, user: { id: string, username: string }): Promise<void> => {
+    const firebase = useFirebase();
+    await firebase.reVoteForStory(sessionId, storyId, user);
+}

@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useUserStore } from 'src/shared/stores';
+
 const props = defineProps<{
     username: string,
 }>();
 
 const emits = defineEmits(['remove']);
+
+const { isAdmin } = storeToRefs(useUserStore());
+
 </script>
 
 <template>
@@ -12,6 +18,7 @@ const emits = defineEmits(['remove']);
       <div class="team-member__username">{{ username }}</div>
       <div class="team-member__actions">
         <v-btn
+          v-if="isAdmin"
           density="compact"
           variant="text"
           size="small"

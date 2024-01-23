@@ -1,12 +1,16 @@
 <script setup lang="ts">
 // import Timer from '../../components/Timer.vue';
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from 'src/shared/stores';
 
 const props = defineProps<{
     storyStatus: string,
 }>();
 
 const emits = defineEmits(['start-estimation', 'reveal-all-cards', 'done', 'restart']);
+
+const { isAdmin } = storeToRefs(useUserStore());
 
 const isAllVoted = computed(() => {
     return (props.storyStatus === 'voted' || props.storyStatus === 'done') ?? false;
@@ -20,7 +24,7 @@ const isDone = computed(() => {
 <template>
   <div class="start-estimation-story">
     <v-btn
-      v-if="props.storyStatus === 'created'"
+      v-if="props.storyStatus === 'created' && isAdmin"
       density="compact"
       color="indigo-accent-4"
       style="font-size: 10px"
@@ -35,7 +39,7 @@ const isDone = computed(() => {
     </v-btn>
     <template v-else>
       <v-btn
-        v-if="!isAllVoted"
+        v-if="!isAllVoted && isAdmin"
         density="compact"
         color="indigo-accent-4"
         style="font-size: 10px"
@@ -49,7 +53,7 @@ const isDone = computed(() => {
         Reveal all cards
       </v-btn>
       <v-btn
-        v-if="isAllVoted && !isDone"
+        v-if="isAllVoted && !isDone && isAdmin"
         density="compact"
         color="indigo-accent-4"
         style="font-size: 10px"
@@ -63,7 +67,7 @@ const isDone = computed(() => {
         Done
       </v-btn>
       <v-btn
-        v-if="isDone"
+        v-if="isDone && isAdmin"
         density="compact"
         color="indigo-accent-4"
         style="font-size: 10px"
