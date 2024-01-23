@@ -5,6 +5,7 @@ import useStoriesStore from './stories';
 import useCommonStore from './common';
 import useUserStore from './user';
 import useTeamStore from './team';
+import useNotifyStore from './notification';
 
 const store = createPinia();
 
@@ -16,4 +17,5 @@ export {
     useCommonStore,
     useUserStore,
     useTeamStore,
+    useNotifyStore,
 }

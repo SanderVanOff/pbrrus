@@ -7,7 +7,6 @@ import {
     getAllPokerSession,
     createNewStory,
     getPokerSessionById,
-    setCurrentUserToSessionParticipants,
     setParticipantsToStory,
     changeStoryStatus,
     voteForStory,
@@ -58,12 +57,6 @@ export const useFirebase = (): {
             status: string,
             estimation: number,
             totalTime: number,
-        }) => Promise<void>,
-    setCurrentUserToSessionParticipants: (
-        sessionId: string,
-        payload: {
-            id: string,
-            username: string,
         }) => Promise<void>,
     setParticipantsToStory: (
         sessionId: string,
@@ -118,7 +111,6 @@ export const useFirebase = (): {
         getAllPokerSession,
         createNewStory,
         getPokerSessionById,
-        setCurrentUserToSessionParticipants,
         setParticipantsToStory,
         startObserveStory,
         changeStoryStatus,

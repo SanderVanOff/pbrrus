@@ -61,7 +61,7 @@ export const createNewStory = async (
             totalTime: payload.totalTime,
         });
     } catch (e) {
-        console.log(e);
+        throw e;
     }
 }
 
@@ -187,23 +187,6 @@ export const getPokerSessionById = async(id: string): Promise<any> => {
         } else {
             console.log("No data available");
         }
-    } catch (e) {
-        console.log(e);
-    }
-}
-
-export const setCurrentUserToSessionParticipants = async (
-    sessionId: string,
-    payload: {
-        id: string,
-        username: string,
-    }): Promise<void> => {
-    const db = getDatabase();
-    try {
-        await set(dbRef(db, `poker-session/${sessionId}/participants/${payload.id}`), {
-            id: payload.id,
-            username: payload.username,
-        });
     } catch (e) {
         console.log(e);
     }

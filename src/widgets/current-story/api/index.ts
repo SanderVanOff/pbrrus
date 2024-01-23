@@ -1,5 +1,6 @@
 import { useFirebase } from 'src/shared/plugins/firebase';
 import { useStoriesStore } from 'src/shared/stores';
+import { useNotifyStore } from 'src/shared/stores';
 
 export const startStory = async (sessionId: string, storyId: string, status: string): Promise<void> => {
     const firebase = useFirebase();
@@ -17,9 +18,18 @@ export const setParticipantsToStory = async (
     }[],
     ): Promise<void> => {
     const firebase = useFirebase();
-    await firebase.setParticipantsToStory(sessionId, storyId, participants);
-    const storiesStore = useStoriesStore()
-    storiesStore.setParticipantsToCurrentStory(storyId, participants);
+    try {
+        await firebase.setParticipantsToStory(sessionId, storyId, participants);
+        const storiesStore = useStoriesStore()
+        storiesStore.setParticipantsToCurrentStory(storyId, participants);
+    } catch (e) {
+        const notifyStory = useNotifyStore();
+        notifyStory.addNotification({
+            type: 'error',
+            text: 'Ошибка при добавлении участников в стори сессии'
+        });
+        throw e;
+    }
 }
 
 export const voteForStory = async (
@@ -32,15 +42,42 @@ export const voteForStory = async (
         isVoted: boolean,
     }): Promise<void> => {
     const firebase = useFirebase();
-    await firebase.voteForStory(sessionId, storyId, user);
+    try {
+        await firebase.voteForStory(sessionId, storyId, user);
+    } catch (e) {
+        const notifyStory = useNotifyStore();
+        notifyStory.addNotification({
+            type: 'error',
+            text: 'Ошибка при голосовании'
+        });
+        throw e;
+    }
 }
 
 export const setStoryStatus = async (sessionId: string, storyId: string, status: string): Promise<void> => {
     const firebase = useFirebase();
-    await firebase.changeStoryStatus(sessionId, storyId, status);
+    try {
+        await firebase.changeStoryStatus(sessionId, storyId, status);
+    } catch (e) {
+        const notifyStory = useNotifyStore();
+        notifyStory.addNotification({
+            type: 'error',
+            text: 'Ошибка при изменении статуса стори'
+        });
+        throw e;
+    }
 }
 
 export const reVote = async (sessionId: string, storyId: string, user: { id: string, username: string }): Promise<void> => {
     const firebase = useFirebase();
-    await firebase.reVoteForStory(sessionId, storyId, user);
+    try {
+        await firebase.reVoteForStory(sessionId, storyId, user);
+    } catch (e) {
+        const notifyStory = useNotifyStore();
+        notifyStory.addNotification({
+            type: 'error',
+            text: 'Ошибка при переголосовании'
+        });
+        throw e;
+    }
 }

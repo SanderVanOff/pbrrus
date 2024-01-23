@@ -3,12 +3,11 @@ import Content from 'src/widgets/content/index.vue';
 import Header from 'src/widgets/header';
 import StoryList from 'src/widgets/story-list';
 import CurrentStory from 'src/widgets/current-story';
-import { getPokerSessionById, setCurrentUserToSessionParticipants } from './api';
+import { getPokerSessionById } from './api';
 import router from 'src/shared/router';
 import { useCommonStore, usePokerSessionStore, useStoriesStore, useUserStore } from 'src/shared/stores';
 import { storeToRefs } from 'pinia';
 import { AppLoadingMask } from 'src/shared/components';
-import { Ref, ref } from 'vue';
 
 const { isGlobalLoading } = storeToRefs(useCommonStore());
 const storiesStore = useStoriesStore();
