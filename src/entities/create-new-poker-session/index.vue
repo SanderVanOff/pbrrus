@@ -16,7 +16,7 @@ const createNewSession = async (): Promise<void> => {
 
 <template>
   <v-card class="create-new-poker-session">
-    <div class="create-new-poker-session__title">Create new poker-session</div>
+    <div class="create-new-poker-session__title">Create new session</div>
     <div class="create-new-poker-session__content">
       <v-text-field
         v-model="title"

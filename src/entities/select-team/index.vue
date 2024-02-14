@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
 
 const emits = defineEmits(['update:is-open', 'selected']);
 
-const selectedTeam: Ref<string | null> = ref(null);
+const selectedTeam: Ref<{ name: string, id: string } | null> = ref(null);
 
 const teams = await getAllTeams();
 
@@ -47,7 +47,6 @@ const selectTeam = (): void => {
           :items="teams"
           item-title="name"
           item-value="id"
-          :return-object="false"
         />
       </div>
       <div class="select-team-card__actions">
