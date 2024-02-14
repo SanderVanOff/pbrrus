@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
+import { useNotifyStore, usePokerSessionStore } from 'src/shared/stores';
 
 const props = defineProps<{
     isOpen: boolean,
@@ -7,16 +8,24 @@ const props = defineProps<{
 
 const emits = defineEmits(['update:is-open', 'add-new-story']);
 
+const sessionStore = usePokerSessionStore();
+
 const text: Ref<string | null> = ref(null);
 
 const link: Ref<string | null> = ref(null);
 
 const addNewStory = (): void => {
-    if (text.value) {
+    if (text.value && sessionStore.sessionParticipants.filter((item) => item.isActive).length) {
         emits('add-new-story', { text: text.value, link: link.value });
         text.value = null;
         link.value = null;
         emits('update:is-open', false);
+    } else {
+        const notifyStory = useNotifyStore();
+        notifyStory.addNotification({
+            type: 'error',
+            text: 'You can\'t start stories without participants'
+        });
     }
 }
 </script>

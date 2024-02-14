@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import StoryCard from 'src/entities/stories/story-card';
 import CreateNewStoryComponent from 'src/entities/stories/create-new-story';
-
-const props = defineProps<{
-    sessionId: string,
-}>();
-
 import { useStoriesStore, useUserStore } from 'src/shared/stores';
 import { computed, ref } from 'vue';
 import { createNewStory, startObserveStory } from './api';
 import router from 'src/shared/router';
 import { storeToRefs } from 'pinia';
+
+const props = defineProps<{
+    sessionId: string,
+}>();
 
 const storiesStore = useStoriesStore();
 
@@ -24,6 +23,10 @@ const selectStory = (storyId: string): void => {
 }
 
 const currentStory = computed(() => storiesStore.stories.find((item) => item.id === storiesStore.currentStoryId));
+
+const onCreateNewStory = async (value: {text: string, link?: string | undefined}): Promise<void> => {
+    await createNewStory(router.currentRoute.value.params.id as string, value);
+}
 
 const isDone = computed(() => {
     return currentStory.value?.status  === 'done' ? 'light-green-lighten-3' : '';
@@ -67,7 +70,7 @@ const isDone = computed(() => {
     </v-btn>
     <CreateNewStoryComponent
       v-model:is-open="isOpenStoryCreationModal"
-      @add-new-story="createNewStory(router.currentRoute.value.params.id as string, $event);"
+      @add-new-story="onCreateNewStory"
     />
   </v-card>
 </template>

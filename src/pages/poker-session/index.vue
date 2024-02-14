@@ -51,8 +51,10 @@ isGlobalLoading.value = false;
             class="poker-session-story-list"
           />
           <SessionTeam
-            v-if="pokerSession.participants && pokerSession.participants.length"
+            v-if="userStore.isAdmin && pokerSession.participants && pokerSession.participants.length"
+            :session-id="pokerSession.id"
             :participants="pokerSession.participants!"
+            class="mt-2"
           />
         </div>
         <CurrentStory
@@ -85,7 +87,7 @@ isGlobalLoading.value = false;
 }
 
 .poker-session-story-list {
-  height: 85%;
-  margin-bottom: 1rem;
+  min-height: 85%;
+  height: 100%;
 }
 </style>

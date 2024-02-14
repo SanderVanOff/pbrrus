@@ -191,3 +191,20 @@ export const getPokerSessionById = async(id: string): Promise<any> => {
         console.log(e);
     }
 }
+
+export const updateActiveSessionParticipants = async(
+    sessionId: string,
+    participants: {
+        id: string,
+        teamName: string,
+        username: string,
+        isActive: boolean,
+    }[],
+): Promise<any> => {
+    try {
+        const db = getDatabase();
+        await set(dbRef(db, `poker-session/${sessionId}/participants`), participants);
+    } catch (e) {
+        throw e;
+    }
+}

@@ -12,6 +12,7 @@ import {
     voteForStory,
     startObserveStory,
     reVoteForStory,
+    updateActiveSessionParticipants,
 } from './session';
 import {
     registerNewUser,
@@ -79,6 +80,12 @@ export const useFirebase = (): {
             isVoted: boolean,
         }) => Promise<void>,
     reVoteForStory: (sessionId: string, storyId: string, user: { id: string, username: string }) => Promise<void>,
+    updateActiveSessionParticipants: (sessionId: string, participants: {
+        id: string,
+        teamName: string,
+        username: string,
+        isActive: boolean,
+    }[]) => Promise<void>,
     //
     registerNewUser: (user: {id: string, email: string, password: string, username: string, role: string }) => Promise<void>,
     logIn: (email: string, password: string) => Promise<User | undefined>,
@@ -122,5 +129,6 @@ export const useFirebase = (): {
         changeTeam,
         getTeamMembers,
         reVoteForStory,
+        updateActiveSessionParticipants,
     }
 }

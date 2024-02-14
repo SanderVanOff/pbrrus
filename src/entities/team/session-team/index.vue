@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia';
 import { useCommonStore } from 'src/shared/stores';
 
 const props = defineProps<{
+    sessionId: string,
     participants: {
         id: string,
         teamName: string,
@@ -26,9 +27,10 @@ const internalParticipants: Ref<{
 
 const onUpdateActiveSessionParticipants = async (): Promise<void> => {
     isGlobalLoading.value = true;
-    await updateActiveSessionParticipants();
+    await updateActiveSessionParticipants(props.sessionId, internalParticipants.value);
     internalParticipants.value = props.participants;
     isGlobalLoading.value = false;
+    isEditModalOpen.value = false;
 }
 
 </script>
@@ -70,7 +72,6 @@ const onUpdateActiveSessionParticipants = async (): Promise<void> => {
           :key="item.id"
           class="session-team-edit__item"
         >
-          <pre>{{item}}</pre>
           <v-checkbox
             v-model="item.isActive"
             :label="item.username"
@@ -106,6 +107,7 @@ const onUpdateActiveSessionParticipants = async (): Promise<void> => {
 <style lang="scss" scoped>
 .session-team {
   padding: 1rem;
+  height: 100%;
 
   &__title {
     font-size: 13px;
