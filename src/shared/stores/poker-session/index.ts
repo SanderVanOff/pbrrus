@@ -9,26 +9,21 @@ const usePokerSessionStore = defineStore('poker-session-store', () => {
 
     const _sessionParticipants: Ref<{
         id: string,
+        teamName: string,
         username: string,
+        isActive: boolean,
     }[]> = ref([]);
 
     const sessionParticipants = computed(() => _sessionParticipants.value);
 
     const setSessionParticipants = (sp: {
         id: string,
+        teamName: string,
         username: string,
+        isActive: boolean,
     }[]): void => {
         _sessionParticipants.value = sp;
     }
-
-    const setParticipantsToSession = (sessionId: string, payload: { id: string, username: string}): void => {
-        const currentSession = _pokerSessions.value.find((item) => item.id === sessionId);
-        if (currentSession) {
-            currentSession.participants = currentSession.participants ? currentSession.participants : [];
-            currentSession.participants.push(payload);
-        }
-    }
-
 
     const fillPokerSession = (ps: PokerSession[]): void => {
         _pokerSessions.value = ps;
@@ -44,7 +39,6 @@ const usePokerSessionStore = defineStore('poker-session-store', () => {
         fillPokerSession,
         sessionParticipants,
         setSessionParticipants,
-        setParticipantsToSession,
     }
 });
 

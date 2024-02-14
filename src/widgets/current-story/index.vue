@@ -5,7 +5,7 @@ import StoriesPersonCard from 'src/entities/stories/person-card';
 import VoteCards from 'src/entities/stories/vote-cards';
 
 import { useCommonStore, useStoriesStore, usePokerSessionStore, useUserStore } from 'src/shared/stores';
-import { computed, Ref, ref, watch } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { setParticipantsToStory, voteForStory, startStory as startCurrentStory, setStoryStatus, reVote } from './api';
 import { storeToRefs } from 'pinia';
 
@@ -17,7 +17,6 @@ const userStore = useUserStore();
 const props = defineProps<{
     sessionId: string,
 }>();
-
 
 const isModalOpen: Ref<boolean> = ref(false);
 
@@ -46,8 +45,9 @@ const vote = async (val: number): Promise<void> => {
 const startStory = async (): Promise<void> => {
     if (currentStory.value) {
         commonStore.isGlobalLoading = true;
-        await startCurrentStory(props.sessionId, currentStory.value!.id, 'inProgress');
-        const storyParticipants = sessionStore.sessionParticipants.map((item) => {
+        const storyParticipants = sessionStore.sessionParticipants
+            .filter((item) => item.isActive)
+            .map((item) => {
             return {
                 ...item,
                 result: 0,
@@ -55,7 +55,9 @@ const startStory = async (): Promise<void> => {
             }
         });
 
+        await startCurrentStory(props.sessionId, currentStory.value!.id, 'inProgress');
         await setParticipantsToStory(props.sessionId, currentStory.value!.id, storyParticipants);
+
         commonStore.isGlobalLoading = false;
     }
 }
