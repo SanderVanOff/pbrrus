@@ -37,13 +37,19 @@ const internalCreationTime = computed(() => {
   padding: 0.5rem 1rem;
   background: rgba(0,0,0,0.025);
 
+  &__title {
+    font-size: 0.75rem;
+  }
+
   &__title-text {
     font-weight: bold;
     margin-bottom: 0.25rem;
+    margin-right: 1rem;
   }
 
   &__creation-time {
     color: grey;
+    font-size: 12px;
   }
 }
 </style>

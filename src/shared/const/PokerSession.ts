@@ -3,5 +3,5 @@ export type PokerSession = {
     title: string,
     creationTime: string,
     stories?: any[],
-    participants?: { id: string, username: string }[],
+    participants?: { id: string, teamName: string, username: string, isActive: boolean }[],
 };

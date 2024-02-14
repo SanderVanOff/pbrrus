@@ -17,19 +17,19 @@ const { isAdmin } = storeToRefs(useUserStore());
 
 const isSelectTeamOpen = ref(false);
 
-const teamName: Ref<string | null> = ref(null);
+const sessionName: Ref<string | null> = ref(null);
 
-const createTeamName = (name: string): void => {
-    teamName.value = name;
+const createSessionName = (name: string): void => {
+    sessionName.value = name;
     isSelectTeamOpen.value = true;
 }
 
-const selectedTeam = async (teamId: string): Promise<void> => {
-    if (teamName.value) {
+const selectedTeam = async (team: { id: string, name: string }): Promise<void> => {
+    if (sessionName.value) {
         isSelectTeamOpen.value = false;
         isGlobalLoading.value = true;
-        await createNewSession(teamName.value as string, teamId);
-        teamName.value = null;
+        await createNewSession(sessionName.value as string, team);
+        sessionName.value = null;
         isGlobalLoading.value = false;
     }
 }
@@ -41,11 +41,10 @@ const selectedTeam = async (teamId: string): Promise<void> => {
     <Header />
     <Content class="main-view__content">
       <div>
-        <pre>{{teamName}}</pre>
         <CreateNewPokerSession
           v-if="isAdmin"
           class="mb-4"
-          @create-team="createTeamName($event)"
+          @create-team="createSessionName($event)"
         />
         <PokerSessionList />
         <SelectTeam

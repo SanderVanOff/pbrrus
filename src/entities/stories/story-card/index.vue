@@ -26,6 +26,7 @@ const props = defineProps<{
 
   &__title {
     width: 100%;
+    font-size: 13px;
   }
 
   &__estimation {

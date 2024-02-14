@@ -31,7 +31,7 @@ const isDone = computed(() => {
 </script>
 
 <template>
-  <div class="task-list">
+  <v-card class="task-list">
     <div class="task-list__title">Stories</div>
     <div
       v-if="storiesStore.stories.length"
@@ -69,7 +69,7 @@ const isDone = computed(() => {
       v-model:is-open="isOpenStoryCreationModal"
       @add-new-story="createNewStory(router.currentRoute.value.params.id as string, $event);"
     />
-  </div>
+  </v-card>
 </template>
 
 <style lang="scss" scoped>
@@ -86,7 +86,7 @@ const isDone = computed(() => {
 
   &__list {
     min-height: max-content;
-    max-height: 600px;
+    max-height: 80%;
     height: 100%;
     overflow-y: auto;
     margin-bottom: 1rem;

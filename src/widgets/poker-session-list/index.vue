@@ -10,7 +10,15 @@ const { isGlobalLoading } = storeToRefs(useCommonStore());
 
 const pokerSessionStore = usePokerSessionStore();
 
-const lastFivePokerSessions = computed(() => pokerSessionStore.pokerSessions ? pokerSessionStore.pokerSessions.slice(-5) : []);
+const lastFivePokerSessions = computed(() => {
+    if (pokerSessionStore.pokerSessions) {
+        return pokerSessionStore.pokerSessions
+            .sort((a, b) => new Date(a.creationTime).getTime() - new Date(b.creationTime).getTime());
+            // .slice(-5);
+    }
+
+    return [];
+});
 
 isGlobalLoading.value = true;
 await PokerSessionApi.loadAllPokerSession();
@@ -19,7 +27,7 @@ isGlobalLoading.value = false;
 
 <template>
   <v-card class="poker-session-list">
-    <div class="poker-session-list__title">Poker-sessions</div>
+    <div class="poker-session-list__title">Sessions</div>
     <div class="poker-session-list__items">
       <RouterLink
         v-for="item in lastFivePokerSessions"

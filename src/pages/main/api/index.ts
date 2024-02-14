@@ -4,12 +4,12 @@ import { PokerSession } from 'src/shared/const';
 import { uuidv4 } from 'src/shared/utils';
 import { useNotifyStore } from 'src/shared/stores';
 
-export const createNewSession = async (title: string, teamId: string): Promise<void> => {
+export const createNewSession = async (title: string, team: { id: string, name: string }): Promise<void> => {
     const firebase = useFirebase();
     const pokerSessionStore = usePokerSessionStore();
 
     try {
-        const teamMembers = await firebase.getTeamMembers(teamId);
+        const teamMembers = await firebase.getTeamMembers(team.id);
 
         const pokerSession: PokerSession  = {
             id: uuidv4(),
@@ -18,7 +18,9 @@ export const createNewSession = async (title: string, teamId: string): Promise<v
             participants: teamMembers.map((item) => {
                 return {
                     id: item.id,
+                    teamName: team.name,
                     username: item.username,
+                    isActive: true,
                 }
             })
         };

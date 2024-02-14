@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Content from 'src/widgets/content/index.vue';
+import SessionTeam from 'src/entities/team/session-team';
 import Header from 'src/widgets/header';
 import StoryList from 'src/widgets/story-list';
 import CurrentStory from 'src/widgets/current-story';
@@ -44,11 +45,16 @@ isGlobalLoading.value = false;
       <div
         v-if="pokerSession"
         class="poker-session__content">
-        <v-card class="poker-session__story-list">
+        <div class="poker-session__story-list">
           <StoryList
             :session-id="pokerSession.id"
+            class="poker-session-story-list"
           />
-        </v-card>
+          <SessionTeam
+            v-if="pokerSession.participants && pokerSession.participants.length"
+            :participants="pokerSession.participants!"
+          />
+        </div>
         <CurrentStory
           :session-id="pokerSession.id"
         />
@@ -71,7 +77,15 @@ isGlobalLoading.value = false;
   }
 
   &__story-list {
-    height: max-content;
+    //height: max-content;
+    height: 85svh;
+    display: flex;
+    flex-direction: column;
   }
+}
+
+.poker-session-story-list {
+  height: 85%;
+  margin-bottom: 1rem;
 }
 </style>
