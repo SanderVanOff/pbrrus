@@ -13,7 +13,7 @@ const pokerSessionStore = usePokerSessionStore();
 const lastFivePokerSessions = computed(() => {
     if (pokerSessionStore.pokerSessions) {
         return pokerSessionStore.pokerSessions
-            .sort((a, b) => new Date(a.creationTime).getTime() - new Date(b.creationTime).getTime());
+            .sort((a, b) => new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime());
             // .slice(-5);
     }
 
