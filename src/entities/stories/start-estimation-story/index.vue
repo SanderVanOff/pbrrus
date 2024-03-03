@@ -3,6 +3,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from 'src/shared/stores';
+import VotingNotice from 'src/features/voting-notice/index';
 
 const props = defineProps<{
     storyStatus: string,
@@ -80,6 +81,7 @@ const isDone = computed(() => {
         />
         restart
       </v-btn>
+      <VotingNotice v-if="props.storyStatus === 'inProgress'"/>
     </template>
 <!--    <Timer />-->
   </div>

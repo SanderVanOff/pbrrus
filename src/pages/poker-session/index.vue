@@ -9,6 +9,7 @@ import router from 'src/shared/router';
 import { useCommonStore, usePokerSessionStore, useStoriesStore, useUserStore } from 'src/shared/stores';
 import { storeToRefs } from 'pinia';
 import { AppLoadingMask } from 'src/shared/components';
+import { computed, Ref, ref, watch } from 'vue';
 
 const { isGlobalLoading } = storeToRefs(useCommonStore());
 const storiesStore = useStoriesStore();
@@ -31,6 +32,24 @@ if (pokerSession && pokerSession.stories) {
 if (pokerSession && pokerSession.participants) {
     sessionStore.setSessionParticipants(pokerSession.participants);
 }
+
+const onSelectNextStory = (): void => {
+    const idx = storiesStore.stories.findIndex((item) => item.id === storiesStore.currentStoryId);
+    if (storiesStore.stories[idx + 1]) {
+        storiesStore.currentStoryId = storiesStore.stories[idx + 1].id;
+    }
+}
+
+const currentStoryStatus = computed(() => {
+    return storiesStore.stories.find((item) => item.id === storiesStore.currentStoryId)?.status ?? null;
+});
+
+const stop = watch(currentStoryStatus, (newStatus, oldStatus) => {
+    if (newStatus === 'done' && oldStatus === 'voted') {
+        onSelectNextStory();
+        stop();
+    }
+});
 
 isGlobalLoading.value = false;
 </script>
