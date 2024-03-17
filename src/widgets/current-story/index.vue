@@ -139,6 +139,8 @@ const canReVote = computed(() => {
     >
       <StartEstimationStory
         :story-status="currentStory.status"
+        :session-id="props.sessionId"
+        :story-id="currentStory.id"
         class="mb-4"
         @start-estimation="startStory"
         @reveal-all-cards="revealAllCards"

@@ -71,7 +71,7 @@ export const startObserveStory = (sessionId: string, storyId: string): void => {
             const story = snapshot.val()
             const storiesStore = useStoriesStore();
             storiesStore.setStatusStore(storyId, story.status);
-            storiesStore.setParticipantsToCurrentStory(storyId, Object.keys(story.participants).map((key) => story.participants[key]))
+            storiesStore.setParticipantsToCurrentStory(storyId, Object.keys(story.participants).map((key) => story.participants[key]));
         } else {
             console.log('нет данных')
         }
@@ -86,6 +86,20 @@ export const startObserveStory = (sessionId: string, storyId: string): void => {
             console.log('нет данных')
         }
     });
+
+    onValue(dbRef(getDatabase(), `poker-session/${sessionId}/notify`), (data) => {
+        const storiesStore = useStoriesStore();
+        if (data.exists()) {
+            const newVal = data.val();
+            if (storiesStore.notifyValue && storiesStore.notifyValue < newVal) {
+                storiesStore.notifyAboutVoting();
+            }
+            storiesStore.notifyValue = newVal;
+
+        } else {
+            console.log('нет данных')
+        }
+    });
 }
 
 export const changeStoryStatus = async (sessionId: string, storyId: string, status: string): Promise<void> => {
@@ -95,6 +109,15 @@ export const changeStoryStatus = async (sessionId: string, storyId: string, stat
         console.log(e);
     }
 
+}
+
+export const notifyAboutVoting = async (sessionId: string, storyId: string): Promise<void> => {
+    try {
+        const val = new Date().getTime();
+        await set(dbRef(getDatabase(), `poker-session/${sessionId}/notify`), val);
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 export const setParticipantsToStory = async (
