@@ -71,6 +71,13 @@ const useStoriesStore = defineStore('stories', () => {
         }
     }
 
+    const notifyValue: Ref<number | null> = ref(null);
+
+    const notifyAboutVoting = () => {
+        const audio = new Audio(`/sounds/counter-strike-jingle-cs-radio-ok-lets-go.mp3`);
+        audio.play();
+    }
+
     return {
         stories,
         addNewStory,
@@ -79,6 +86,8 @@ const useStoriesStore = defineStore('stories', () => {
         vote,
         setStatusStore,
         currentStoryId,
+        notifyValue,
+        notifyAboutVoting,
     }
 });
 

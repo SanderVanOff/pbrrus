@@ -3,9 +3,12 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from 'src/shared/stores';
+import VotingNoticeButton from 'src/features/voting-notice';
 
 const props = defineProps<{
     storyStatus: string,
+    sessionId: string,
+    storyId: string,
 }>();
 
 const emits = defineEmits(['start-estimation', 'reveal-all-cards', 'done', 'restart']);
@@ -80,6 +83,10 @@ const isDone = computed(() => {
         />
         restart
       </v-btn>
+      <VotingNoticeButton
+        :session-id="sessionId"
+        :story-id="storyId"
+        v-if="isAdmin"/>
     </template>
 <!--    <Timer />-->
   </div>

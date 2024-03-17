@@ -13,6 +13,7 @@ import {
     startObserveStory,
     reVoteForStory,
     updateActiveSessionParticipants,
+    notifyAboutVoting,
 } from './session';
 import {
     registerNewUser,
@@ -70,6 +71,7 @@ export const useFirebase = (): {
         }[]) => Promise<void>,
     changeStoryStatus: (sessionId: string, storyId: string, status: string) => Promise<void>,
     startObserveStory: (sessionId: string, storyId: string) => void,
+    notifyAboutVoting: (sessionId: string, storyId: string) => void,
     voteForStory: (
         sessionId: string,
         storyId: string,
@@ -130,5 +132,6 @@ export const useFirebase = (): {
         getTeamMembers,
         reVoteForStory,
         updateActiveSessionParticipants,
+        notifyAboutVoting,
     }
 }
