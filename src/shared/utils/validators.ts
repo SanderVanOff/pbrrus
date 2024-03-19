@@ -6,7 +6,7 @@ export const useValidators = (): {
     const required = (v) => !v ? 'required field' : true;
 
     const isEmail = (v) => {
-        if (/^[0-9a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(v)) return true
+        if (/^[0-9a-z.-_]+@[a-z.-]+\.[a-z]+$/i.test(v)) return true
 
         return 'invalid email.'
     }
