@@ -59,6 +59,7 @@ export const useFirebase = (): {
             status: string,
             estimation: number,
             totalTime: number,
+            timeStamp: number,
         }) => Promise<void>,
     setParticipantsToStory: (
         sessionId: string,

@@ -17,6 +17,7 @@ type Story = {
     estimation: number,
     totalTime: number,
     participants?: StoryParticipants[],
+    timeStamp?: number,
 }
 
 const useStoriesStore = defineStore('stories', () => {
