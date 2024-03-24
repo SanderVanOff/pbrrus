@@ -31,6 +31,10 @@ const onCreateNewStory = async (value: {text: string, link?: string | undefined}
 const isDone = computed(() => {
     return currentStory.value?.status  === 'done' ? 'light-green-lighten-3' : '';
 });
+
+const sortedStories = computed(() => {
+    return storiesStore.stories.sort((a, b) => a.timeStamp - b.timeStamp);
+});
 </script>
 
 <template>
@@ -41,7 +45,7 @@ const isDone = computed(() => {
       class="task-list__list"
     >
       <StoryCard
-        v-for="item in storiesStore.stories"
+        v-for="item in sortedStories"
         :title="item.text"
         :estimation="item.estimation"
         :class="`mb-3 ${item.id === currentStory?.id ? 'selected' : ''}`"

@@ -49,6 +49,7 @@ export const createNewStory = async (
         status: string,
         estimation: number,
         totalTime: number,
+        timeStamp: number,
     }): Promise<any> => {
     const db = getDatabase();
     try {
@@ -59,6 +60,7 @@ export const createNewStory = async (
             status: payload.status,
             estimation: payload.estimation,
             totalTime: payload.totalTime,
+            timeStamp: payload.timeStamp,
         });
     } catch (e) {
         throw e;
@@ -196,6 +198,10 @@ export const getPokerSessionById = async(id: string): Promise<any> => {
 
                     if (data.stories[key].participants) {
                         res.participants = Object.keys(data.stories[key].participants).map((k) => data.stories[key].participants[k]);
+                    }
+
+                    if (!data.stories[key].timeStamp) {
+                        res.timeStamp = 0;
                     }
 
                     return res;

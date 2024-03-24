@@ -13,6 +13,7 @@ const createNewStory = async (sessionId: string, payload: { text: string, link?:
         status: 'created',
         estimation: 0,
         totalTime: 0,
+        timeStamp: new Date().getTime(),
     }
 
     try {
