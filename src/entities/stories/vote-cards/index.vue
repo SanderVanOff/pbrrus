@@ -18,7 +18,7 @@ const voteCards = ref([
     { name: '1d', value: 8 },
     { name: '1d 4h', value: 12 },
     { name: '2d', value: 16 },
-    { name: '3d', value: 16 },
+    { name: '3d', value: 24 },
 ]);
 
 </script>
