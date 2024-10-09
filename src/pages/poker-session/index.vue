@@ -89,5 +89,6 @@ isGlobalLoading.value = false;
 .poker-session-story-list {
   min-height: 85%;
   height: 100%;
+  overflow-y: auto;
 }
 </style>
