@@ -81,3 +81,17 @@ export const reVote = async (sessionId: string, storyId: string, user: { id: str
         throw e;
     }
 }
+
+export const removeStory = async (sessionId: string, storyId: string): Promise<void> => {
+    const firebase = useFirebase();
+    try {
+        await firebase.removeStory(sessionId, storyId);
+    } catch (e) {
+        const notifyStory = useNotifyStore();
+        notifyStory.addNotification({
+            type: 'error',
+            text: 'Ошибка при удалении story'
+        });
+        throw e;
+    }
+}

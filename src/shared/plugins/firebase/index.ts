@@ -14,6 +14,7 @@ import {
     reVoteForStory,
     updateActiveSessionParticipants,
     notifyAboutVoting,
+    removeStory,
 } from './session';
 import {
     registerNewUser,
@@ -89,6 +90,7 @@ export const useFirebase = (): {
         username: string,
         isActive: boolean,
     }[]) => Promise<void>,
+    removeStory: (sessionId: string, storyId: string) => Promise<void>,
     //
     registerNewUser: (user: {id: string, email: string, password: string, username: string, role: string }) => Promise<void>,
     logIn: (email: string, password: string) => Promise<User | undefined>,
@@ -134,5 +136,6 @@ export const useFirebase = (): {
         reVoteForStory,
         updateActiveSessionParticipants,
         notifyAboutVoting,
+        removeStory,
     }
 }
