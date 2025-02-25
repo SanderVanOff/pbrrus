@@ -237,3 +237,15 @@ export const updateActiveSessionParticipants = async(
         throw e;
     }
 }
+
+export const removeStory = async (
+    sessionId: string,
+    storyId: string,
+): Promise<void> => {
+    try {
+        const db = getDatabase();
+        await set(dbRef(db, `poker-session/${sessionId}/stories/${storyId}`), null);
+    } catch (e) {
+        throw e;
+    }
+}

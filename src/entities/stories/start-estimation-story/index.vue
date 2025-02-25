@@ -11,7 +11,7 @@ const props = defineProps<{
     storyId: string,
 }>();
 
-const emits = defineEmits(['start-estimation', 'reveal-all-cards', 'done', 'restart']);
+const emits = defineEmits(['start-estimation', 'reveal-all-cards', 'done', 'restart', 'delete']);
 
 const { isAdmin } = storeToRefs(useUserStore());
 
@@ -88,6 +88,20 @@ const isDone = computed(() => {
         :story-id="storyId"
         v-if="isAdmin"/>
     </template>
+    <div class="ml-auto">
+      <VBtn
+        v-if="isAdmin"
+        density="compact"
+        color="red"
+        style="font-size: 10px"
+        @click="emits('delete')"
+      >
+        <VIcon
+          class="mr-1"
+          icon="mdi mdi-close"></VIcon>
+        Delete
+      </VBtn>
+    </div>
 <!--    <Timer />-->
   </div>
 </template>

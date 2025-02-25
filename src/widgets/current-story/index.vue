@@ -6,7 +6,7 @@ import VoteCards from 'src/entities/stories/vote-cards';
 
 import { useCommonStore, useStoriesStore, usePokerSessionStore, useUserStore } from 'src/shared/stores';
 import { computed, Ref, ref } from 'vue';
-import { setParticipantsToStory, voteForStory, startStory as startCurrentStory, setStoryStatus, reVote } from './api';
+import { setParticipantsToStory, voteForStory, startStory as startCurrentStory, setStoryStatus, reVote, removeStory } from './api';
 import { storeToRefs } from 'pinia';
 
 const storiesStore = useStoriesStore();
@@ -107,6 +107,11 @@ const canReVote = computed(() => {
 
     return false;
 });
+
+const onStoryDeleted = async (): Promise<void> => {
+    await removeStory(props.sessionId, currentStory.value!.id);
+    storiesStore.removeStory(currentStory.value!.id);
+}
 </script>
 
 <template>
@@ -146,6 +151,7 @@ const canReVote = computed(() => {
         @reveal-all-cards="revealAllCards"
         @done="closeStory"
         @restart="restartStory"
+        @delete="onStoryDeleted"
       />
       <StoryTeam
         v-if="currentStory.status !== 'created'"

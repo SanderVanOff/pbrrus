@@ -79,6 +79,10 @@ const useStoriesStore = defineStore('stories', () => {
         audio.play();
     }
 
+    const removeStory = (id: string): void => {
+        _stories.value = _stories.value.filter((item) => item.id !== id);
+    }
+
     return {
         stories,
         addNewStory,
@@ -89,6 +93,7 @@ const useStoriesStore = defineStore('stories', () => {
         currentStoryId,
         notifyValue,
         notifyAboutVoting,
+        removeStory,
     }
 });
 
