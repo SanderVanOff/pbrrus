@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/old",
+      "destination": "/new",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "/news/:path*",
+      "permanent": false
+    }
+  ]
+}
